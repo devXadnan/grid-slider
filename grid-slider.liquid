@@ -1,0 +1,227 @@
+<link rel="stylesheet"  href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+<div class="grid-slider">
+  <div {% render 'section-properties' %}>
+    <div class="swiper">
+      <!-- Additional required wrapper -->
+      <div class="swiper-wrapper">
+        <!-- Slides -->
+        {%- for block in section.blocks -%}
+          <div class="swiper-slide rounded">
+            <a href="{{ block.settings.slide_url }}">
+              {%- if block.settings.slide_image != blank -%}
+               <img class="sg-img" src="{{ block.settings.slide_image | image_url }}" Loading="lazy"> 
+              {%- endif -%}
+              <div class="carousel-meta">
+                <h3>{{ block.settings.slide_title }}</h3>
+                <p>{{ block.settings.slide_desc }}</p>
+              </div>
+            </a>  
+          </div>
+        {%- endfor -%}
+      </div>
+      {% if section.settings.en_dots %}
+      <div class="swiper-pagination"></div>
+       {% endif %}
+      <!-- If we need navigation buttons -->
+      {% if section.settings.en_arrows %}
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<style>
+  .swiper {
+  width: 100%;
+    padding: 0 0 40px 0;
+}
+  .swiper-slide{
+   padding: 15px; 
+  }
+  .grid-slider{
+  background:{{ section.settings.bg_color }};
+  } 
+.swiper-slide{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #EEE;
+}
+  .swiper .sg-img{
+    object-fit: contain;
+    max-height: {{ section.settings.img_size }};
+    width: 100%;
+  }
+  .grid-slider .swiper-slide h3,.grid-slider .swiper-slide p{
+  background:{{ section.settings.txt_color }};
+  }
+  .grid-slider .carousel-meta{
+  text-align: {{ section.settings.text_align }};
+  }
+  .carousel-meta h3{
+    font-size: inherit;
+    font-weight: 700;
+  }
+</style>
+<script>
+  const swiper = new Swiper('.swiper', {
+  // Optional parameters
+  loop: true,
+  centeredSlides: true,
+  // Navigation arrows
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+  pagination: {
+    el: ".swiper-pagination",
+    clickable: true
+  },
+  breakpoints: {
+    // when window width is >= 320px
+    768: {
+      slidesPerView: 2,
+      spaceBetween: 30
+    },
+    // when window width is >= 480px
+    1140: {
+      slidesPerView: {{ section.settings.slides }},
+      spaceBetween: 40
+    }
+  }
+});
+</script>
+
+
+{% schema %}
+  {
+    "name": "Grid slider",
+    "class": "shopify-section--announcement-bar",
+    "settings": [
+      {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Background color"
+      },
+      {
+        "type": "color",
+        "id": "txt_color",
+        "label": "Text Color"
+      },
+      {
+        "type": "select",
+        "id": "text_align",
+        "label": "Image Height",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ],
+        "default": "center"
+      },
+      {
+        "type": "select",
+        "id": "img_size",
+        "label": "Image Height",
+        "options": [
+          {
+            "value": "280px",
+            "label": "Small"
+          },
+          {
+            "value": "340px",
+            "label": "Medium"
+          },
+          {
+            "value": "480px",
+            "label": "Larg"
+          },
+          {
+            "value": "600px",
+            "label": "Extra Large"
+          }
+        ],
+        "default": "480px"
+      },
+      {
+        "type": "checkbox",
+        "id": "en_arrows",
+        "label": "Enable arrows",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "en_dots",
+        "label": "Enable Pagination/dots",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "slides",
+        "label": "Number of slides on Desktop",
+        "min": 2,
+        "max": 6,
+        "step": 1,
+        "default": 3
+      }
+    ],
+  "max_blocks": 16,
+  "blocks": [
+    {
+      "type": "slide-grid",
+      "name": "Slide Grid",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "slide_image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "slide_title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "slide_desc",
+          "label": "Description"
+        },
+        {
+          "type": "url",
+          "id": "slide_url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Grid slider",
+      "blocks": [
+        {
+          "type": "slide-grid",
+          "settings": {}
+        },
+        {
+          "type": "slide-grid",
+          "settings": {}
+        },
+        {
+          "type": "slide-grid",
+          "settings": {}
+        }
+      ]
+    }
+  ]
+  }
+{% endschema %}
